@@ -1,14 +1,16 @@
-<%= link_to 'edit profile', edit_profile_path(:id => @profile_login.id) %>
-<%= link_to 'logout', destroy_user_session_path, :method=>'delete' %>
+<%= link_to 'home', root_path %>
+<%= link_to 'edit my profile', edit_profile_path(:id => @profile_login.id)  %>
+<%= link_to 'logout', destroy_user_session_path, :method=>'delete'  %>
 <%= link_to 'new post', new_post_path %>
 <%= link_to 'friendships', friendships_path %>
+<h2><%= @profile.firstname + ' ' + @profile.surname %></h2>
 <ul>
   <% @posts.each do |post| %>
-    <li><%= post.profile.firstname %>: <%= post.message %>. <%= link_to 'Add Comment', new_comment_from_post_path(:post_id => post.id) %></li>
+    <li><%= link_to post.profile.firstname,wall_profile_path(post.profile) %>: <%= post.message %>. <%= link_to 'Add Comment', new_comment_from_post_path(:post_id => post.id) %></li>
       <% if post.comments %>
       <ul>
         <% post.comments.each do |comment| %>
-            <li><%= comment.profile.firstname %>: <%= comment.message %></li>
+                <li><%= link_to comment.profile.firstname,wall_profile_path(comment.profile) %>: <%= comment.message %></li>
         <% end %>
        </ul>
       <% end %>

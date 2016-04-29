@@ -6,7 +6,7 @@
        @all_friends.each do |friendship|%>
           <%  if (friendship.profile == current_user.profile)
                 show << friendship.profile1.id %>
-                <li><%=  friendship.profile1.firstname %>
+                <li><%= link_to friendship.profile1.firstname,wall_profile_path(friendship.profile1) %>
                 <% if(friendship.state == 0) %>
                     <%= link_to 'Remove request', friendship_remove_request_path(friendship), :method => 'post' %>
                 <% else %>
@@ -16,7 +16,7 @@
           <% else
                 show << friendship.profile.id %>
                 <li>
-                    <%= friendship.profile.firstname %>
+                    <%= link_to friendship.profile.firstname,wall_profile_path(friendship.profile) %>
                     <%= link_to 'Accept', friendship_accept_path(friendship), :method => 'post' %>
                     <%= link_to 'Declined', friendship_declined_path(friendship), :method => 'post' %>
                 </li>
@@ -29,7 +29,7 @@
        @not_friends.each do |profile|
          if(!show.include?(profile.id)) %>
             <li>
-              <%= profile.firstname %>
+              <%= link_to profile.firstname,wall_profile_path(profile) %>
               <%= link_to 'Send request', friendship_send_request_path(profile), :method => 'post' %>
             </li>
       <% end

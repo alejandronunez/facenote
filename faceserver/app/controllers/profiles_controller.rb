@@ -3,7 +3,13 @@ class ProfilesController < ApplicationController
 
   def wall
     # asd =current_user
-    @posts = Post.where(:profile =>current_user.profile.friends.to_a << current_user.profile).order(created_at: :desc)
+    if(params[:id])
+      @profile = Profile.find(params[:id])
+    else
+      @profile = current_user.profile
+    end
+    @posts = Post.where(:profile =>current_user.profile.friends.to_a << @profile).order(created_at: :desc)
+
     # byebug
   end
   # GET /profiles
