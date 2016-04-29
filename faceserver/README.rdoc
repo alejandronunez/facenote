@@ -1,0 +1,4 @@
+== README
+
+<tt>rake db:migrate</tt>.
+<tt>rake db:seed</tt>.

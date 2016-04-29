@@ -1,0 +1,33 @@
+[WARNING] The model name 'profiles' was recognized as a plural, using the singular 'profile' instead. Override with --force-plural or setup custom inflection rules for this noun before running the generator.
+      invoke  active_record
+      create    db/migrate/20160428191428_create_profiles.rb
+   identical    app/models/profile.rb
+      invoke    test_unit
+   identical      test/models/profile_test.rb
+   identical      test/fixtures/profiles.yml
+      invoke  resource_route
+       route    resources :profiles
+      invoke  scaffold_controller
+   identical    app/controllers/profiles_controller.rb
+      invoke    erb
+       exist      app/views/profiles
+   identical      app/views/profiles/index.html.erb
+   identical      app/views/profiles/edit.html.erb
+   identical      app/views/profiles/show.html.erb
+   identical      app/views/profiles/new.html.erb
+   identical      app/views/profiles/_form.html.erb
+      invoke    test_unit
+   identical      test/controllers/profiles_controller_test.rb
+      invoke    helper
+   identical      app/helpers/profiles_helper.rb
+      invoke      test_unit
+      invoke    jbuilder
+   identical      app/views/profiles/index.json.jbuilder
+   identical      app/views/profiles/show.json.jbuilder
+      invoke  assets
+      invoke    coffee
+   identical      app/assets/javascripts/profiles.coffee
+      invoke    scss
+   identical      app/assets/stylesheets/profiles.scss
+      invoke  scss
+   identical    app/assets/stylesheets/scaffolds.scss

@@ -1,0 +1,40 @@
+<h3>All</h3>
+<ul>
+
+  <% show = []
+     if @all_friends
+       @all_friends.each do |friendship|%>
+          <%  if (friendship.profile == current_user.profile)
+                show << friendship.profile1.id %>
+                <li><%=  friendship.profile1.firstname %>
+                <% if(friendship.state == 0) %>
+                    <%= link_to 'Remove request', friendship_remove_request_path(friendship), :method => 'post' %>
+                <% else %>
+                    <%= link_to 'Remove friend', friendship_remove_friend_path(friendship), :method => 'post' %>
+                <% end %>
+                </li>
+          <% else
+                show << friendship.profile.id %>
+                <li>
+                    <%= friendship.profile.firstname %>
+                    <%= link_to 'Accept', friendship_accept_path(friendship), :method => 'post' %>
+                    <%= link_to 'Declined', friendship_declined_path(friendship), :method => 'post' %>
+                </li>
+          <% end %>
+      <% end
+         end%>
+
+  <%
+     if @not_friends
+       @not_friends.each do |profile|
+         if(!show.include?(profile.id)) %>
+            <li>
+              <%= profile.firstname %>
+              <%= link_to 'Send request', friendship_send_request_path(profile), :method => 'post' %>
+            </li>
+      <% end
+       end
+     end %>
+</ul>
+<%= link_to 'Home', root_path %>
+
