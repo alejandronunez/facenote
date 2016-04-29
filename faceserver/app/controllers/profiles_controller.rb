@@ -72,6 +72,10 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def like
+    current_user.profile.like!(Post.find(params['post_id']))
+    redirect_to :back
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_profile

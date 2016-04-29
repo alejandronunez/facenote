@@ -1,4 +1,5 @@
 class Profile < ActiveRecord::Base
+  acts_as_liker
   belongs_to :user
   has_many :posts
   has_many :friendships
