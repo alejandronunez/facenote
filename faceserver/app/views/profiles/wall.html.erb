@@ -4,6 +4,7 @@
 <%= link_to 'new post', new_post_path %>
 <%= link_to 'friendships', friendships_path %>
 <h2><%= @profile.firstname + ' ' + @profile.surname %></h2>
+<%= image_tag @profile.image.content.url(:thumb) %>
 <ul>
   <% @posts.each do |post| %>
     <li><%= link_to post.profile.firstname,wall_profile_path(post.profile) %>: <%= post.message %>. <%= link_to 'I like ('+post.likers_count.to_s+')', like_post_path(:post_id => post.id),:method=> 'Post' %>. <%= link_to 'Add Comment', new_comment_from_post_path(:post_id => post.id) %></li>

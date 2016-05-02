@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429184510) do
+ActiveRecord::Schema.define(version: 20160502155211) do
 
   create_table "comments", force: :cascade do |t|
     t.string   "message"
@@ -38,6 +38,16 @@ ActiveRecord::Schema.define(version: 20160429184510) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "state"
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "attachment_id"
+    t.string   "attachment_type"
+    t.string   "content_file_name"
+    t.string   "content_content_type"
+    t.integer  "content_file_size"
+    t.datetime "content_updated_at"
   end
 
   create_table "likes", force: :cascade do |t|

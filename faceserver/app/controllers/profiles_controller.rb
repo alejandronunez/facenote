@@ -51,8 +51,12 @@ class ProfilesController < ApplicationController
   # PATCH/PUT /profiles/1
   # PATCH/PUT /profiles/1.json
   def update
+    image = Image.create({:name=>profile_params['firstname'],:content=>profile_params['image']})
+    pp = profile_params
+    pp['image'] = image
+    # byebug
     respond_to do |format|
-      if @profile.update(profile_params)
+      if @profile.update(pp)
         format.html { redirect_to @profile, notice: 'Profile was successfully updated.' }
         format.json { render :show, status: :ok, location: @profile }
       else
@@ -84,6 +88,6 @@ class ProfilesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def profile_params
-      params.require(:profile).permit(:firstname, :surname, :age, :gender, :birday)
+      params.require(:profile).permit(:firstname, :surname, :age, :gender, :birday,:image)
     end
 end

@@ -6,4 +6,5 @@ class Profile < ActiveRecord::Base
   has_many :friendships_to, :class_name => 'Friendship',:foreign_key => 'profile1_id'
   has_many :friends, -> { where 'friendships.state'=> 1 }, :class_name => 'Profile', through: :friendships, :source => :profile1
 
+  has_one :image, as: :attachment
 end
