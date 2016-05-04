@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for 'User', at: 'auth'
   get 'comments/to/:post_id' =>'comments#new', :as => 'new_comment_from_post'
   resources :comments
   resources :posts
   resources :profiles
-  devise_for :users , :controllers => {:registrations => "registrations"}
+  # devise_for :users , :controllers => {:registrations => 'registrations',sessions: 'sessions'}
   resources :users
   get 'friendships' => 'friendships#index', :as => 'friendships'
+  get 'friends_of' => 'friendships#friends_of'
+  get 'friends_of/:id' => 'friendships#friends_of'
   post 'friendships/:id/accept' => 'friendships#accept', :as => 'friendship_accept'
   post 'friendships/:id/declined' => 'friendships#remove_friend', :as => 'friendship_declined'
   post 'friendships/:id/remove_request' => 'friendships#remove_friend', :as => 'friendship_remove_request'
@@ -13,6 +16,8 @@ Rails.application.routes.draw do
   post 'friendships/:id/send_request' => 'friendships#send_request', :as => 'friendship_send_request'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
+  get 'home' => 'profiles#wall'
+  get 'profile' => 'profiles#wall'
   get 'profile/:id' => 'profiles#wall', :as => 'wall_profile'
   post 'profile/:post_id/like' => 'profiles#like', :as => 'like_post'
   # You can have the root of your site routed with "root"

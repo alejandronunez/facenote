@@ -1,4 +1,6 @@
 class FriendshipsController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     current_profile = current_user.profile
     @friendships = current_profile.friends
@@ -20,5 +22,25 @@ class FriendshipsController < ApplicationController
   def send_request
     Friendship.create(:profile => current_user.profile,:profile1_id => params[:id],:state=>0)
     redirect_to friendships_path
+  end
+  def friends_of
+    if (params[:id])
+      id = params[:id]
+    else
+      id = current_user.profile.id
+    end
+    @all_friends = Friendship.where("profile_id = :cprofile AND state = 1",{:cprofile=> id})
+    respond_to do |format|
+      format.json {
+        render :json => @all_friends.to_json(
+          :include=>{
+              :profile1=>{
+                  :only => [:id,:firstname,:surname],
+                  :include=>{
+                      :image=>{:methods => :content_url}}}
+          }
+        )
+      }
+    end
   end
 end

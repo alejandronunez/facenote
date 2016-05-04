@@ -1,16 +1,35 @@
 class ProfilesController < ApplicationController
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   def wall
     # asd =current_user
+    # byebug
     if(params[:id])
       @profile = Profile.find(params[:id])
     else
       @profile = current_user.profile
     end
-    @posts = Post.where(:profile =>current_user.profile.friends.to_a << @profile).order(created_at: :desc)
-
-    # byebug
+    @posts = Post.where(:profile =>@profile.friends.to_a << @profile).order(created_at: :desc)
+    respond_to do |format|
+      format.json { render :json => @posts.to_json(
+          :only=>[:message,:created_at],
+          :include=>{
+              :profile=>{
+                  :only => [:firstname,:surname],
+                  :include=>{
+                      :image=>{:methods => :content_url}}},
+              :comments=>{
+                  :only => [:message,:created_at],
+                  :include=>{
+                      :profile =>{
+                          :only => [:firstname,:surname]
+                      }
+                  }
+              }
+          })}
+      format.html { render :wall }
+    end
   end
   # GET /profiles
   # GET /profiles.json
