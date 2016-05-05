@@ -10,24 +10,39 @@ class ProfilesController < ApplicationController
     else
       @profile = current_user.profile
     end
-    @posts = Post.where(:profile =>@profile.friends.to_a << @profile).order(created_at: :desc)
+    if (@profile)
+      @posts = Post.where(:profile =>@profile.friends.to_a << @profile).order(created_at: :desc)
+    else
+      @posts = [];
+    end
     respond_to do |format|
-      format.json { render :json => @posts.to_json(
-          :only=>[:message,:created_at],
-          :include=>{
-              :profile=>{
-                  :only => [:firstname,:surname],
-                  :include=>{
-                      :image=>{:methods => :content_url}}},
-              :comments=>{
-                  :only => [:message,:created_at],
-                  :include=>{
-                      :profile =>{
-                          :only => [:firstname,:surname]
-                      }
-                  }
-              }
-          })}
+      format.json { render :json => {
+            posts:@posts.to_json(
+                :only=>[:message,:created_at],
+                :include=>{
+                    :profile=>{
+                        :only => [:id,:firstname,:surname],
+                        :include=>{
+                            :image=>{:methods => :content_url}}},
+                    :comments=>{
+                        :only => [:message,:created_at],
+                        :include=>{
+                            :profile =>{
+                                :only => [:id,:firstname,:surname],
+                                :include=>{
+                                    :image=>{:methods => :content_url}}
+                            }
+                        }
+                    }
+                }
+            ),
+            profile:@profile.to_json(
+                :only => [:id,:firstname,:surname],
+                :include=>{
+                    :image=>{:methods => :content_url}}
+            ),
+            owner: current_user.profile.id == @profile.id
+      }}
       format.html { render :wall }
     end
   end
@@ -70,9 +85,11 @@ class ProfilesController < ApplicationController
   # PATCH/PUT /profiles/1
   # PATCH/PUT /profiles/1.json
   def update
-    image = Image.create({:name=>profile_params['firstname'],:content=>profile_params['image']})
     pp = profile_params
-    pp['image'] = image
+    if(profile_params['firstname']&&profile_params['image'])
+      image = Image.create({:name=>profile_params['firstname'],:content=>profile_params['image']})
+      pp['image'] = image
+    end
     # byebug
     respond_to do |format|
       if @profile.update(pp)

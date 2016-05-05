@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth'
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+      registrations:  'registrations'
+  }
   get 'comments/to/:post_id' =>'comments#new', :as => 'new_comment_from_post'
   resources :comments
   resources :posts
   resources :profiles
-  # devise_for :users , :controllers => {:registrations => 'registrations',sessions: 'sessions'}
   resources :users
   get 'friendships' => 'friendships#index', :as => 'friendships'
   get 'friends_of' => 'friendships#friends_of'
