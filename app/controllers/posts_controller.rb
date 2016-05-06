@@ -32,7 +32,26 @@ class PostsController < ApplicationController
     respond_to do |format|
       if @post.save
         format.html { redirect_to root_path, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
+        format.json { render :json => @post.to_json(
+                :only=>[:id,:message,:created_at,:likers_count],
+                :include=>{
+                    :profile=>{
+                        :only => [:id,:firstname,:surname],
+                        :include=>{
+                            :image=>{:methods => :content_url}}},
+                    :comments=>{
+                        :only => [:message,:created_at],
+                        :include=>{
+                            :profile =>{
+                                :only => [:id,:firstname,:surname],
+                                :include=>{
+                                    :image=>{:methods => :content_url}}
+                            }
+                        }
+                    }
+                }
+            )
+        }
       else
         format.html { render :new }
         format.json { render json: @post.errors, status: :unprocessable_entity }

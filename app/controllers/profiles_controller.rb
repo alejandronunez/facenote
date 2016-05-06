@@ -18,7 +18,7 @@ class ProfilesController < ApplicationController
     respond_to do |format|
       format.json { render :json => {
             posts:@posts.to_json(
-                :only=>[:message,:created_at],
+                :only=>[:id,:message,:created_at,:likers_count],
                 :include=>{
                     :profile=>{
                         :only => [:id,:firstname,:surname],
@@ -85,10 +85,16 @@ class ProfilesController < ApplicationController
   # PATCH/PUT /profiles/1
   # PATCH/PUT /profiles/1.json
   def update
-    pp = profile_params
-    if(profile_params['firstname']&&profile_params['image'])
-      image = Image.create({:name=>profile_params['firstname'],:content=>profile_params['image']})
+    filtered_data = profile_params
+    pp = filtered_data
+
+    # byebug
+    if(filtered_data['firstname']&&filtered_data['image'])
+      image = Image.create({:name=> filtered_data['firstname'], :content=> filtered_data['image']})
       pp['image'] = image
+    end
+    if(params['image_id'])
+      pp['image'] = Image.find(params['image_id']);
     end
     # byebug
     respond_to do |format|
@@ -114,7 +120,11 @@ class ProfilesController < ApplicationController
 
   def like
     current_user.profile.like!(Post.find(params['post_id']))
-    redirect_to :back
+    np = Post.find(params['post_id'])
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.json { render :json => np.likers_count}
+    end
   end
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -124,6 +134,6 @@ class ProfilesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def profile_params
-      params.require(:profile).permit(:firstname, :surname, :age, :gender, :birday,:image)
+      params.require(:profile).permit(:firstname, :surname, :age, :gender, :birday,:image,:image_id)
     end
 end

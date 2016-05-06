@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   get 'profile/:id' => 'profiles#wall', :as => 'wall_profile'
   post 'profile/:post_id/like' => 'profiles#like', :as => 'like_post'
   # You can have the root of your site routed with "root"
+
+  post 'images' => 'images#upload'
   root 'profiles#wall'
 
 

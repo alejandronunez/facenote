@@ -34,7 +34,16 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
         format.html { redirect_to root_path, notice: 'Comment was successfully created.' }
-        format.json { render :show, status: :created, location: @comment }
+        format.json { render :json => @comment.to_json(
+            :only => [:post_id,:message,:created_at],
+            :include=>{
+                :profile =>{
+                    :only => [:id,:firstname,:surname],
+                    :include=>{
+                        :image=>{:methods => :content_url}}
+                }
+            }
+        ) }
       else
         format.html { render :new }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
